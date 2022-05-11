@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const yup = require("yup");
-
+const Supervisee = require("./supervisee");
 //supervisor Schema
 const SupervisorSchema = new mongoose.Schema({
-  supervizer: {
+  supervisor: {
     type: String,
     required: true,
     minlength: 3,
@@ -21,31 +21,31 @@ const SupervisorSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 100,
   },
-  supervizee: {
+  supervisee: [Supervisee.schema],
+  senioritylevel: {
     type: Number,
-    require: true,
-    min: 0,
-    max: 100,
+    required: true,
+    max: 5,
+    min: 1,
   },
-  supervizerid: {
+  supervisorid: {
     type: Number,
-    require: true,
+    unique: true,
   },
 });
 
-const validateSupervisor = (supervisor) => {
-  const schema = yup.object().shape({
-    supervizer: yup.string().required().min(3).max(20),
-  });
-  return schema
-    .validate(supervisor)
-    .then((supervisor) => supervisor)
-    .catch((error) =>{
-        return{
-            message:error.message
-        }
-    });
-};
+// const validateSupervisor = (supervisor) => {
+//   const schema = yup.object().shape({
+//     supervizer: yup.string().required().min(3).max(20),
+//   });
+//   return schema
+//     .validate(supervisor)
+//     .then((supervisor) => supervisor)
+//     .catch((error) =>{
+//         return{
+//             message:error.message
+//         }
+//     });
+// };
 
-exports.Supervisor = new mongoose.model("supervisor", SupervisorSchema);
-exports.validateSupervisor = validateSupervisor;
+module.exports = new mongoose.model("supervisor", SupervisorSchema);
